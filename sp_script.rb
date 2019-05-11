@@ -1,12 +1,7 @@
+#Orca_Pi V.1#
 
 use_bpm 60
-T = 1
-set :buff_len3, 8
-
-live_loop :ticker do
-  cue :tick
-  sleep T
-end
+T= 1.0
 
 
 ### MASTER ###
@@ -36,7 +31,7 @@ live_loop :audio_in do
     with_fx :reverb, mix: a/10.0, room: b/10.0, damp: c/10.0 do
       with_fx :echo, mix: d/10.0, phase: e/4.0, decay: f do
         with_fx :bitcrusher, mix: g/10.0, bits: h, sample_rate: i*1000, cutoff: j*10 do
-          with_fx :panslicer, mix: 01, phase: 4, wave: 2, smooth: 0.15 do
+          with_fx :panslicer, mix: 1, phase: 4, wave: 2, smooth: 0.15 do
             live_audio :chan1, input: 2
           end
         end
@@ -53,10 +48,10 @@ live_loop :recorder1 do
   set :buff_len1, v[0]
   print "RECORDING BUFFER ONE, LEN: " + v[0].to_s + " CHAN: " + v[1].to_s
   with_fx :level, amp: 0 do
-    with_fx :record, buffer: buffer(:buff_one, v[0]), pre_mix: 0, pre_mix_slide: 0.3 do |e|
+    with_fx :record, buffer: buffer(:buff_one, v[0]), pre_mix: 0, pre_mix_slide: 0.1 do |e|
       control e, pre_mix: 1
       live_audio :mic, input: v[1]
-      sleep T*v[0]-0.3
+      sleep T*v[0]-0.1
       control e, pre_mix: 0
     end
   end
@@ -94,7 +89,7 @@ end
 
 ###LOOPERS###
 
-live_loop :looper1, sync: :tick do
+live_loop :looper1 do
   v = sync "/osc/d"
   a = get[:buff_len1]
   b = v[0]
@@ -111,10 +106,9 @@ live_loop :looper1, sync: :tick do
   with_fx :pitch_shift, mix: h/10.0, pitch: i, window_size: j/4.0 do
     sample buffer(buff, a), rate: b/4.0, rpitch: c, start: d/35.0, finish: f/35.0, amp: g if one_in(l)
   end
-  sleep k
 end
 
-live_loop :looper2, sync: :tick do
+live_loop :looper2 do
   v = sync "/osc/e"
   a = get[:buff_len2]
   b = v[0]
@@ -131,10 +125,9 @@ live_loop :looper2, sync: :tick do
   with_fx :pitch_shift, mix: h/10.0, pitch: i, window_size: j/4.0 do
     sample buffer(buff, a), rate: b/4.0, rpitch: c, start: d/35.0, finish: e/35.0, attack: 0.05, decay: 0.05, amp: g if one_in(l)
   end
-  sleep k
 end
 
-live_loop :looper3, sync: :tick do
+live_loop :looper3 do
   v = sync "/osc/f"
   a = get[:buff_len3]
   b = v[0]
@@ -153,7 +146,6 @@ live_loop :looper3, sync: :tick do
   buff = :buff_three
   with_fx :pitch_shift, mix: h/10.0, pitch: i, window_size: j/4.0, pitch_dis: 0.001, time_dis: 0.001 do
     sample buffer(buff, a), start: s, finish: st, rate: b/4.0, rpitch: c, attack: 0.05, release: 0.05, amp: g, pan: rrand(-1,1) if one_in(l)
-    sleep a/16.0
   end
 end
 
