@@ -1,11 +1,7 @@
-# Orca Pi #
-# Tundra  #
-# 050519  #
 
 use_bpm 60
 T = 1
 set :buff_len3, 8
-
 
 live_loop :ticker do
   cue :tick
@@ -42,7 +38,6 @@ live_loop :audio_in do
         with_fx :bitcrusher, mix: g/10.0, bits: h, sample_rate: i*1000, cutoff: j*10 do
           with_fx :panslicer, mix: 01, phase: 4, wave: 2, smooth: 0.15 do
             live_audio :chan1, input: 2
-            
           end
         end
       end
