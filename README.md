@@ -1,5 +1,5 @@
 # orca-pi
-Examples of using Orca to control synths and live looping/sampling in Sonic Pi.
+Examples of using Orca to control synths and live looping/sampling in Sonic Pi via OSC commands
 
 
 ORCA + SONIC PI
